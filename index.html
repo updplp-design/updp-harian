@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UPDP Harian</title>
+<meta name="theme-color" content="#0e6e66">
+<meta name="description" content="Takwim, kehadiran dan peringatan harian Unit Pembekalan & Pengedaran, Lembaga Peperiksaan">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UPDP Harian">
+<style>
+  html,body{margin:0;height:100%;background:#f3f5f7;font-family:Arial,Helvetica,sans-serif;color:#15212f}
+  body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);box-sizing:border-box}
+  #app{position:fixed;inset:env(safe-area-inset-top) 0 0 0;width:100%;height:calc(100% - env(safe-area-inset-top));border:0;display:block;background:#f3f5f7}
+  #splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0e6e66;color:#fff;transition:opacity .3s}
+  #splash img{width:96px;height:96px;border-radius:22px}
+  #splash b{font-size:20px}#splash span{font-size:13px;opacity:.85}
+  #offline{display:none;position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:24px;text-align:center;background:#f3f5f7}
+  #offline button,#splash a{font:inherit;font-weight:bold;padding:9px 16px;border-radius:8px;border:0;background:#0e6e66;color:#fff;text-decoration:none}
+  #splash a{background:#fff;color:#0e6e66;display:none;margin-top:6px}
+</style>
+</head>
+<body>
+<!-- ============================================================
+     TETAPAN: https://script.google.com/a/macros/moe.gov.my/s/AKfycbwzoxnukACQ8p5QiFzA8AX-jWDgyODwt6TCqmWn-MHiHkNGjHkdruhZ_d04h6BykWdt/exec (berakhir dengan /exec)
+     ============================================================ -->
+<script>const URL_APP = 'TAMPAL_PAUTAN_EXEC_DI_SINI';</script>
+
+<div id="splash"><img src="icons/icon-192.png" alt=""><b>UPDP Harian</b><span id="splashMsg">Memuatkan…</span><a id="direct" target="_blank" rel="noopener">Buka terus</a></div>
+<div id="offline"><b>Tiada sambungan internet</b><span>UPDP Harian perlukan internet untuk memaparkan takwim dan kehadiran terkini.</span><button onclick="location.reload()">Cuba lagi</button></div>
+<iframe id="app" title="UPDP Harian" allow="clipboard-write"></iframe>
+<script>
+(function(){
+  var frame=document.getElementById('app'),splash=document.getElementById('splash'),off=document.getElementById('offline');
+  if(URL_APP.indexOf('/exec')<0){document.getElementById('splashMsg').textContent='Pautan web app belum ditetapkan dalam index.html.';return;}
+  document.getElementById('direct').href=URL_APP;
+  function start(){
+    if(!navigator.onLine){off.style.display='flex';return;}
+    off.style.display='none';
+    frame.src=URL_APP;
+    frame.onload=function(){splash.style.opacity='0';setTimeout(function(){splash.style.display='none'},300)};
+    setTimeout(function(){if(splash.style.display!=='none'){document.getElementById('splashMsg').textContent='Lambat dimuatkan? Tekan butang di bawah.';document.getElementById('direct').style.display='inline-block'}},15000);
+  }
+  window.addEventListener('online',function(){if(!frame.src)start()});
+  start();
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
+})();
+</script>
+</body>
+</html>
